@@ -1,19 +1,17 @@
------------------------------------------------------------------------------------------------------------------------------------------
--- piercer_entdebug
 -- Records every entity the server sees being created and removed, so you can look up the ids printed by
 --   script error in native 00000000xxxxxxxx: Tried to access invalid entity: <id>
 -- and find out what they were (or whether the server ever knew them at all).
---
+
 -- Commands (server console, or players with the ACE "command.<name>"):
 --   entinfo <id> [id ...]   what those entities were
 --   entlast [n]             last n removed entities (default 20)
 --   entstats                how many entities are being tracked
 --   entclear                forget everything recorded so far
---
+
 -- Convars (set before ensure, in server.cfg):
 --   set entdebug_keep_minutes 30      how long a removed entity stays in memory
 --   set entdebug_track_created true   also record entities on creation (needed for "still exists")
------------------------------------------------------------------------------------------------------------------------------------------
+
 local KEEP_SECONDS = math.max(1, GetConvarInt('entdebug_keep_minutes', 30)) * 60
 local TRACK_CREATED = GetConvar('entdebug_track_created', 'true') ~= 'false'
 
@@ -29,9 +27,8 @@ local POP = {
     [8] = 'replay', [9] = 'cache', [10] = 'tool'
 }
 
------------------------------------------------------------------------------------------------------------------------------------------
+
 -- HELPERS
------------------------------------------------------------------------------------------------------------------------------------------
 local function safe(fn, ...)
     local ok, res = pcall(fn, ...)
     if ok then return res end
@@ -79,9 +76,7 @@ local function reply(source, msg)
     end
 end
 
------------------------------------------------------------------------------------------------------------------------------------------
 -- TRACKING
------------------------------------------------------------------------------------------------------------------------------------------
 if TRACK_CREATED then
     AddEventHandler('entityCreated', function(entity)
         -- model/owner are not always readable in the same tick the event fires
@@ -121,9 +116,8 @@ CreateThread(function()
     end
 end)
 
------------------------------------------------------------------------------------------------------------------------------------------
+
 -- COMMANDS
------------------------------------------------------------------------------------------------------------------------------------------
 RegisterCommand('entinfo', function(source, args)
     if #args == 0 then return reply(source, 'usage: entinfo <id> [id ...]') end
 
