@@ -1,8 +1,24 @@
-# piercer_entdebug
+<div align="center">
 
-> Find out what is behind `Tried to access invalid entity` errors on your FiveM server.
+# 🔎 piercer_entdebug
 
-🇧🇷 [Leia em português](README.pt-BR.md) · 💬 [FrameZero Discord](https://discord.gg/jZ3vTmdjU7)
+**Find out what's behind `Tried to access invalid entity` errors on your FiveM server.**
+
+Records every entity the server sees being created and removed. When the error shows up, you paste the ids
+and it tells you what each entity was — or that the server **never knew it at all**. Works on **any framework**.
+
+![FiveM](https://img.shields.io/badge/FiveM-resource-F40552?style=for-the-badge)
+![Frameworks](https://img.shields.io/badge/vRP%20%C2%B7%20ESX%20%C2%B7%20QBCore%20%C2%B7%20Qbox%20%C2%B7%20standalone-2b2b2b?style=for-the-badge)
+![Lua](https://img.shields.io/badge/Lua-5.4-000080?style=for-the-badge&logo=lua&logoColor=white)
+[![Discord](https://img.shields.io/badge/Discord-join-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/jZ3vTmdjU7)
+
+[![Ler em Português](https://img.shields.io/badge/Ler%20em%20Portugu%C3%AAs-5865F2?style=for-the-badge&logo=googletranslate&logoColor=white)](README.pt-BR.md)
+
+</div>
+
+---
+
+## 🎯 What it's for
 
 ```
 [    c-scripting-core] script error in native 00000000dafcb3ec: Tried to access invalid entity: 132353
@@ -13,14 +29,12 @@ If your console looks like this, you know *something* is calling a native on an 
 
 **piercer_entdebug** records every entity the server sees being created and removed. When the error shows up, you paste the ids and it tells you what each entity was, or that the server **never knew it at all**.
 
-- Runs on any framework through **framezero_bridge** (vRP, vRPex, ESX, QBCore, Qbox, Creative or standalone) — it is a hard dependency.
-- Server-side only. It answers only the players who run a command.
-- Zero cost when idle: it only reacts to `entityCreated` / `entityRemoved`.
-- Read-only. It never changes or deletes entities.
+- 🧩 Runs on any framework through **framezero_bridge** (vRP, vRPex, ESX, QBCore, Qbox, Creative or standalone) — it is a hard dependency.
+- 🖥️ Server-side only. It answers only the players who run a command.
+- 💤 Zero cost when idle: it only reacts to `entityCreated` / `entityRemoved`.
+- 🔒 Read-only. It never changes or deletes entities.
 
----
-
-## Installation
+## 🚀 Installation
 
 1. Download or clone **both** repositories into your `resources` folder:
    ```
@@ -40,9 +54,7 @@ If your console looks like this, you know *something* is calling a native on an 
 
 > Start it **before** the error happens. Entities removed before the resource started cannot be looked up.
 
----
-
-## Commands
+## ⌨️ Commands
 
 | Command | Description |
 |---|---|
@@ -67,9 +79,7 @@ add_ace group.admin entdebug.admin allow    # all of them at once
 
 In game, the output goes to the chat (or to a notification, when the server has no `chat` resource).
 
----
-
-## Configuration
+## ⚙️ Configuration
 
 Optional convars. Set them in `server.cfg` **before** `ensure piercer_entdebug`:
 
@@ -92,9 +102,7 @@ Who can run the commands in game is set in `config.lua` (the server console is a
 | `Config.perms` | `{ 'admin' }` | Permissions checked through `framezero_bridge`. Empty = only the ACEs above apply. |
 | `Config.denied` | `you don't have access to this.` | Message sent to a player without permission. |
 
----
-
-## Usage
+## 🧭 Usage
 
 1. `ensure piercer_entdebug`
 2. Wait for the error to appear again.
@@ -103,6 +111,8 @@ Who can run the commands in game is set in `config.lua` (the server console is a
    ```
    entinfo 154872 160233 139981
    ```
+
+> Use the real numbers, not `<id>`. And only use ids from errors that showed up **after** the `ensure`.
 
 ### Reading the result
 
@@ -126,9 +136,7 @@ ent=139981 -> the server NEVER saw this entity (tracking for 12 min)
 
 A **client** entity handle (from `PlayerPedId()`, `GetVehiclePedIsIn()`, `GetClosestVehicle()`...) only means something **on that player's game**. Some script is sending it to the server through an event or callback, and the server is calling natives on a number that means nothing there.
 
----
-
-## Fixing "client handle sent to the server"
+## 🛠️ Fixing "client handle sent to the server"
 
 Look for client code that sends a raw entity in an event:
 
@@ -167,9 +175,7 @@ end)
 - The pair of natives in the error tells you what the server does with the entity (see the table below). For example, *model + heading* usually means "save this vehicle/ped position".
 - If the culprit is obfuscated or escrowed, stop candidate resources one at a time and watch whether the error stops.
 
----
-
-## Native hash reference
+## #️⃣ Native hash reference
 
 The error prints the **hash** of the native, not its name. These are common server natives:
 
@@ -198,35 +204,46 @@ The error prints the **hash** of the native, not its name. These are common serv
 
 Not in the list? Your server build has all of them. Open `citizen/scripting/v8/natives_server.js` in your FXServer folder and search for the hash in lowercase (e.g. `0xdafcb3ec`).
 
----
+## ❓ FAQ
 
-## FAQ
+<details>
+<summary><b>Does it affect performance?</b></summary>
 
-**Does it affect performance?**
 No noticeable impact. It stores a small table per entity and cleans it every minute. Removed entities expire after `entdebug_keep_minutes`.
+</details>
 
-**Should I leave it running forever?**
+<details>
+<summary><b>Should I leave it running forever?</b></summary>
+
 It's meant for debugging. Start it, find the problem, then `stop piercer_entdebug`.
+</details>
 
-**Why doesn't the error show the resource name?**
+<details>
+<summary><b>Why doesn't the error show the resource name?</b></summary>
+
 When the calling script catches the error (`pcall`, `try/catch`), only the `c-scripting-core` line is printed, with no stack trace. That's exactly the case this tool was made for.
+</details>
 
-**Does it work with OneSync?**
+<details>
+<summary><b>Does it work with OneSync?</b></summary>
+
 Yes. It requires OneSync, like any server-side entity code.
+</details>
 
----
-
-## Support & community
+## 💬 Support & community
 
 Found a bug, have an idea, or need help reading the output?
 
-- 💬 **FrameZero Discord:** [discord.gg/jZ3vTmdjU7](https://discord.gg/jZ3vTmdjU7)
-- 👤 **Author:** `@piercer` on Discord
+<a href="https://discord.gg/jZ3vTmdjU7"><img src="https://img.shields.io/badge/Join%20the%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
 
-Pull requests are welcome.
+Just ping **@piercer** there. Pull requests are welcome.
 
----
+## 📄 License
 
-## License
+© PIERCER / FrameZero. All rights reserved.
 
-[MIT](LICENSE) © PIERCER / FrameZero. Use, modify and share freely. A ⭐ on the repository is appreciated.
+<div align="center">
+
+**[PIERCER13](https://github.com/PIERCER13)** · Discord **@piercer** · [discord.gg/jZ3vTmdjU7](https://discord.gg/jZ3vTmdjU7)
+
+</div>
