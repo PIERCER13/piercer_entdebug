@@ -2,11 +2,14 @@
 --   script error in native 00000000xxxxxxxx: Tried to access invalid entity: <id>
 -- and find out what they were (or whether the server ever knew them at all).
 
--- Commands (server console, or players with the ACE "command.<name>"):
+-- Commands (server console, or players allowed by Config.perms / the ACE "command.<name>"):
 --   entinfo <id> [id ...]   what those entities were
 --   entlast [n]             last n removed entities (default 20)
 --   entstats                how many entities are being tracked
 --   entclear                forget everything recorded so far
+--
+-- Permissão e notificação passam pela framezero_bridge (ESX, QBCore, Qbox, vRP, vRPex,
+-- Creative ou standalone), por isso ela é obrigatória: dependency 'framezero_bridge'.
 
 -- Convars (set before ensure, in server.cfg):
 --   set entdebug_keep_minutes 30      how long a removed entity stays in memory
@@ -68,12 +71,25 @@ local function describe(info)
 end
 
 -- prints to the server console, or to the player's chat when run in game
-local function reply(source, msg)
-    if source == 0 then
-        print(msg)
-    else
-        TriggerClientEvent('chat:addMessage', source, { args = { '^3entdebug', msg } })
+-- (server without the chat resource: falls back to the bridge notification)
+local function reply(source, msg, kind)
+    if source == 0 then return print(msg) end
+    if GetResourceState('chat') == 'started' then
+        return TriggerClientEvent('chat:addMessage', source, { args = { '^3entdebug', msg } })
     end
+    framezero.Notify(source, kind or 'info', msg, 8000)
+end
+
+-- console always allowed; in game: ACE command.<name> / entdebug.admin, or a Config.perms entry
+local function allowed(source, commandName)
+    if source == 0 then return true end
+    if IsPlayerAceAllowed(source, 'command.' .. commandName) then return true end
+    if IsPlayerAceAllowed(source, 'entdebug.admin') then return true end
+    for _, perm in ipairs(Config.perms or {}) do
+        local ok, has = pcall(framezero.HasPermission, source, perm)
+        if ok and has then return true end
+    end
+    return false
 end
 
 -- TRACKING
@@ -118,7 +134,16 @@ end)
 
 
 -- COMMANDS
-RegisterCommand('entinfo', function(source, args)
+local function command(commandName, fn)
+    RegisterCommand(commandName, function(source, args)
+        if not allowed(source, commandName) then
+            return reply(source, Config.denied or 'access denied', 'error')
+        end
+        fn(source, args)
+    end, false)
+end
+
+command('entinfo', function(source, args)
     if #args == 0 then return reply(source, 'usage: entinfo <id> [id ...]') end
 
     local counts, keys = {}, {}
@@ -149,30 +174,30 @@ RegisterCommand('entinfo', function(source, args)
         reply(source, '--- summary ---')
         for _, k in ipairs(keys) do reply(source, ('%dx  %s'):format(counts[k], k)) end
     end
-end, true)
+end)
 
-RegisterCommand('entlast', function(source, args)
+command('entlast', function(source, args)
     local n = tonumber(args[1]) or 20
     if #order == 0 then return reply(source, 'no entity removed yet') end
     for i = math.max(1, #order - n + 1), #order do
         local info = removed[order[i]]
         if info then reply(source, describe(info)) end
     end
-end, true)
+end)
 
-RegisterCommand('entstats', function(source)
+command('entstats', function(source)
     local alive = 0
     for _ in pairs(created) do alive = alive + 1 end
     reply(source, ('tracking for %d min | removed in memory: %d (kept %d min) | created tracked: %s'):format(
         (os.time() - startedAt) // 60, #order, KEEP_SECONDS // 60, TRACK_CREATED and tostring(alive) or 'disabled'
     ))
-end, true)
+end)
 
-RegisterCommand('entclear', function(source)
+command('entclear', function(source)
     removed, order, created = {}, {}, {}
     startedAt = os.time()
     reply(source, 'cleared')
-end, true)
+end)
 
 print(('^2[piercer_entdebug]^7 running (keep %d min, track created: %s). Use "entinfo <ids>" after the error shows up.'):format(
     KEEP_SECONDS // 60, tostring(TRACK_CREATED)

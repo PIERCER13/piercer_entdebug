@@ -13,8 +13,8 @@ Se o seu console está assim, você sabe que *algum* script está chamando uma n
 
 O **piercer_entdebug** registra toda entidade que o servidor vê nascer e sumir. Quando o erro aparece, você passa os IDs e ele diz o que cada entidade era, ou que o servidor **nunca conheceu** aquela entidade.
 
-- Standalone. Funciona com qualquer framework (vRP, ESX, QBCore, Qbox…).
-- Só server-side. Nada é enviado aos jogadores.
+- Roda em qualquer framework através da **framezero_bridge** (vRP, vRPex, ESX, QBCore, Qbox, Creative ou standalone) — dependência obrigatória.
+- Só server-side. Só responde a quem roda um comando.
 - Sem custo parado: só reage a `entityCreated` / `entityRemoved`.
 - Somente leitura. Nunca altera nem deleta entidades.
 
@@ -22,10 +22,12 @@ O **piercer_entdebug** registra toda entidade que o servidor vê nascer e sumir.
 
 ## Instalação
 
-1. Baixe ou clone este repositório na pasta `resources`:
+1. Baixe ou clone **os dois** repositórios na pasta `resources`:
    ```
+   resources/framezero_bridge
    resources/piercer_entdebug
    ```
+   A `framezero_bridge` é obrigatória: cuida da permissão (grupo/job/ACE do framework) e da notificação no jogo. O FiveM inicia ela antes por causa do `dependency` no manifest.
 2. Inicie pelo console do servidor (não precisa colocar no `server.cfg`, é uma ferramenta de diagnóstico):
    ```
    refresh
@@ -49,16 +51,21 @@ O **piercer_entdebug** registra toda entidade que o servidor vê nascer e sumir.
 | `entstats` | Há quanto tempo está registrando e quantas entidades estão na memória. |
 | `entclear` | Apaga tudo que foi registrado e zera o contador de tempo. |
 
-Todos funcionam no **console do servidor** (Live Console do txAdmin ou a janela do FXServer). Para usar dentro do jogo, libere a ACE:
+Todos funcionam no **console do servidor** (Live Console do txAdmin ou a janela do FXServer). Para usar dentro do jogo, libere o jogador pelo framework (via `framezero_bridge`) ou por ACE:
 
-```cfg
-add_ace group.admin command.entinfo allow
-add_ace group.admin command.entlast allow
-add_ace group.admin command.entstats allow
-add_ace group.admin command.entclear allow
+```lua
+-- config.lua
+Config.perms = { 'admin' }  -- grupo do ESX / job, gang ou permission do QBCore-Qbox / grupo do vRP / ACE no standalone
 ```
 
-No jogo, a resposta aparece no chat.
+```cfg
+-- ou então, sem mexer no config:
+add_ace group.admin command.entinfo allow   # um comando
+add_ace group.admin command.entlast allow
+add_ace group.admin entdebug.admin allow    # ou todos de uma vez
+```
+
+No jogo, a resposta aparece no chat (ou numa notificação, quando o servidor não tem o resource `chat`).
 
 ---
 
@@ -75,6 +82,15 @@ Convars opcionais. Coloque no `server.cfg` **antes** do `ensure piercer_entdebug
 set entdebug_keep_minutes 60
 set entdebug_track_created true
 ```
+
+### Permissões
+
+Quem pode rodar os comandos dentro do jogo fica no `config.lua` (o console do servidor sempre pode):
+
+| Config | Padrão | O que faz |
+|---|---|---|
+| `Config.perms` | `{ 'admin' }` | Permissões consultadas pela `framezero_bridge`. Vazio = só valem as ACEs. |
+| `Config.denied` | `you don't have access to this.` | Mensagem enviada a quem não tem permissão. |
 
 ---
 
