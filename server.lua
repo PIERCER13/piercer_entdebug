@@ -108,8 +108,6 @@ CreateThread(function()
     end
 end)
 
-
--- COMMANDS
 local function command(commandName, fn)
     RegisterCommand(commandName, function(source, args)
         if not allowed(source, commandName) then
