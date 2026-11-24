@@ -70,7 +70,6 @@ local function allowed(source, commandName)
     return false
 end
 
--- TRACKING
 if TRACK_CREATED then
     AddEventHandler('entityCreated', function(entity)
         -- model/owner are not always readable in the same tick the event fires
