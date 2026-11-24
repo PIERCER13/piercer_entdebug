@@ -59,7 +59,6 @@ local function reply(source, msg, kind)
     framezero.Notify(source, kind or 'info', msg, 8000)
 end
 
--- console always allowed; in game: ACE command.<name> / entdebug.admin, or a Config.perms entry
 local function allowed(source, commandName)
     if source == 0 then return true end
     if IsPlayerAceAllowed(source, 'command.' .. commandName) then return true end
