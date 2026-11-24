@@ -1,26 +1,9 @@
--- Records every entity the server sees being created and removed, so you can look up the ids printed by
---   script error in native 00000000xxxxxxxx: Tried to access invalid entity: <id>
--- and find out what they were (or whether the server ever knew them at all).
-
--- Commands (server console, or players allowed by Config.perms / the ACE "command.<name>"):
---   entinfo <id> [id ...]   what those entities were
---   entlast [n]             last n removed entities (default 20)
---   entstats                how many entities are being tracked
---   entclear                forget everything recorded so far
---
--- Permissão e notificação passam pela framezero_bridge (ESX, QBCore, Qbox, vRP, vRPex,
--- Creative ou standalone), por isso ela é obrigatória: dependency 'framezero_bridge'.
-
--- Convars (set before ensure, in server.cfg):
---   set entdebug_keep_minutes 30      how long a removed entity stays in memory
---   set entdebug_track_created true   also record entities on creation (needed for "still exists")
-
 local KEEP_SECONDS = math.max(1, GetConvarInt('entdebug_keep_minutes', 30)) * 60
 local TRACK_CREATED = GetConvar('entdebug_track_created', 'true') ~= 'false'
 
-local removed = {}   -- [handle] = snapshot taken when the server removed it
-local order = {}     -- removed handles, oldest first (for entlast)
-local created = {}   -- [handle] = snapshot taken when the server created it
+local removed = {}  
+local order = {}     
+local created = {}   
 local startedAt = os.time()
 
 local TYPES = { [0] = 'none', [1] = 'PED', [2] = 'VEHICLE', [3] = 'OBJECT' }
@@ -30,8 +13,6 @@ local POP = {
     [8] = 'replay', [9] = 'cache', [10] = 'tool'
 }
 
-
--- HELPERS
 local function safe(fn, ...)
     local ok, res = pcall(fn, ...)
     if ok then return res end
