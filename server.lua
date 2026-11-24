@@ -72,7 +72,6 @@ end
 
 if TRACK_CREATED then
     AddEventHandler('entityCreated', function(entity)
-        -- model/owner are not always readable in the same tick the event fires
         SetTimeout(0, function()
             if DoesEntityExist(entity) then
                 created[entity] = snapshot(entity)
