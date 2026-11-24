@@ -51,8 +51,6 @@ local function describe(info)
     )
 end
 
--- prints to the server console, or to the player's chat when run in game
--- (server without the chat resource: falls back to the bridge notification)
 local function reply(source, msg, kind)
     if source == 0 then return print(msg) end
     if GetResourceState('chat') == 'started' then
