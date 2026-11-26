@@ -10,7 +10,7 @@ e ele diz o que cada entidade era — ou que o servidor **nunca conheceu** aquel
 ![FiveM](https://img.shields.io/badge/FiveM-resource-F40552?style=for-the-badge)
 ![Frameworks](https://img.shields.io/badge/vRP%20%C2%B7%20ESX%20%C2%B7%20QBCore%20%C2%B7%20Qbox%20%C2%B7%20standalone-2b2b2b?style=for-the-badge)
 ![Lua](https://img.shields.io/badge/Lua-5.4-000080?style=for-the-badge&logo=lua&logoColor=white)
-[![Discord](https://img.shields.io/badge/Discord-entrar-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/jZ3vTmdjU7)
+[![Discord](https://img.shields.io/badge/Discord-entrar-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/framezerodevelopment)
 
 [![Read in English](https://img.shields.io/badge/Read%20in%20English-5865F2?style=for-the-badge&logo=googletranslate&logoColor=white)](README.md)
 
@@ -41,7 +41,7 @@ O **piercer_entdebug** registra toda entidade que o servidor vê nascer e sumir.
    resources/framezero_bridge
    resources/piercer_entdebug
    ```
-   A `framezero_bridge` é obrigatória: cuida da permissão (grupo/job/ACE do framework) e da notificação no jogo. O FiveM inicia ela antes por causa do `dependency` no manifest. Baixe ela no [Discord da FrameZero](https://discord.gg/jZ3vTmdjU7).
+   A `framezero_bridge` é obrigatória: cuida da permissão (grupo/job/ACE do framework) e da notificação no jogo. O FiveM inicia ela antes por causa do `dependency` no manifest. Baixe ela no [Discord da FrameZero](https://discord.gg/framezerodevelopment).
 2. Inicie pelo console do servidor (não precisa colocar no `server.cfg`, é uma ferramenta de diagnóstico):
    ```
    refresh
@@ -234,7 +234,7 @@ Sim. Ela precisa do OneSync, como qualquer código de entidade no servidor.
 
 Achou um bug, tem uma ideia ou precisa de ajuda pra entender o resultado?
 
-<a href="https://discord.gg/jZ3vTmdjU7"><img src="https://img.shields.io/badge/Entrar%20no%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
+<a href="https://discord.gg/framezerodevelopment"><img src="https://img.shields.io/badge/Entrar%20no%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
 
 Lá é só chamar o **@piercer**. Pull requests são bem-vindos.
 
@@ -244,6 +244,6 @@ Lá é só chamar o **@piercer**. Pull requests são bem-vindos.
 
 <div align="center">
 
-**[PIERCER13](https://github.com/PIERCER13)** · Discord **@piercer** · [discord.gg/jZ3vTmdjU7](https://discord.gg/jZ3vTmdjU7)
+**[PIERCER13](https://github.com/PIERCER13)** · Discord **@piercer** · [discord.gg/framezerodevelopment](https://discord.gg/framezerodevelopment)
 
 </div>
