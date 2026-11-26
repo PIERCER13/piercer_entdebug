@@ -10,7 +10,7 @@ and it tells you what each entity was — or that the server **never knew it at 
 ![FiveM](https://img.shields.io/badge/FiveM-resource-F40552?style=for-the-badge)
 ![Frameworks](https://img.shields.io/badge/vRP%20%C2%B7%20ESX%20%C2%B7%20QBCore%20%C2%B7%20Qbox%20%C2%B7%20standalone-2b2b2b?style=for-the-badge)
 ![Lua](https://img.shields.io/badge/Lua-5.4-000080?style=for-the-badge&logo=lua&logoColor=white)
-[![Discord](https://img.shields.io/badge/Discord-join-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/jZ3vTmdjU7)
+[![Discord](https://img.shields.io/badge/Discord-join-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/framezerodevelopment)
 
 [![Ler em Português](https://img.shields.io/badge/Ler%20em%20Portugu%C3%AAs-5865F2?style=for-the-badge&logo=googletranslate&logoColor=white)](README.pt-BR.md)
 
@@ -41,7 +41,7 @@ If your console looks like this, you know *something* is calling a native on an 
    resources/framezero_bridge
    resources/piercer_entdebug
    ```
-   `framezero_bridge` is mandatory: it handles the permission check (framework group/job/ACE) and the in-game notification. FiveM starts it first, because of the `dependency` in the manifest. Get it on the [FrameZero Discord](https://discord.gg/jZ3vTmdjU7).
+   `framezero_bridge` is mandatory: it handles the permission check (framework group/job/ACE) and the in-game notification. FiveM starts it first, because of the `dependency` in the manifest. Get it on the [FrameZero Discord](https://discord.gg/framezerodevelopment).
 2. Start it from the server console (no need to add it to `server.cfg`, it's a debugging tool):
    ```
    refresh
@@ -234,7 +234,7 @@ Yes. It requires OneSync, like any server-side entity code.
 
 Found a bug, have an idea, or need help reading the output?
 
-<a href="https://discord.gg/jZ3vTmdjU7"><img src="https://img.shields.io/badge/Join%20the%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
+<a href="https://discord.gg/framezerodevelopment"><img src="https://img.shields.io/badge/Join%20the%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
 
 Just ping **@piercer** there. Pull requests are welcome.
 
@@ -244,6 +244,6 @@ Just ping **@piercer** there. Pull requests are welcome.
 
 <div align="center">
 
-**[PIERCER13](https://github.com/PIERCER13)** · Discord **@piercer** · [discord.gg/jZ3vTmdjU7](https://discord.gg/jZ3vTmdjU7)
+**[PIERCER13](https://github.com/PIERCER13)** · Discord **@piercer** · [discord.gg/framezerodevelopment](https://discord.gg/framezerodevelopment)
 
 </div>
